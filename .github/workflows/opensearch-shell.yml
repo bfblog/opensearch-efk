@@ -1,4 +1,4 @@
-name: ci
+name: opensearch-shell-ci
 
 on:
   workflow_dispatch:
