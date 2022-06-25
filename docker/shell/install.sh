@@ -6,7 +6,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 set -x
 
-apt-get install -y curl gnupg maven bash-completion jq
+apt-get install -y curl gnupg maven bash-completion jq make
 
 echo "installing yq ..."
 curl -o /tmp/yq_linux_amd64.tar.gz -LO https://github.com/mikefarah/yq/releases/download/v4.24.5/yq_linux_amd64.tar.gz 
