@@ -4,7 +4,9 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt-get install -y curl maven bash-completion jq
+set -x
+
+apt-get install -y curl gnupg maven bash-completion jq
 
 echo "installing yq ..."
 curl -o /tmp/yq_linux_amd64.tar.gz -LO https://github.com/mikefarah/yq/releases/download/v4.24.5/yq_linux_amd64.tar.gz 
@@ -17,9 +19,10 @@ rm /tmp/yq_linux_amd64.tar.gz
 
 echo "install kubectl ..."
 apt-get update && apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
 apt-get update
+apt-get upgrade -y
 apt-get install -y kubectl
 
 echo "install docker ..."
