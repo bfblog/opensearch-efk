@@ -12,7 +12,8 @@ data:
   kubernetes.conf: "<source>\r\n  @type tail\r\n  @id in_tail_container_logs\r\n  path
     /var/log/containers/*.log\r\n  pos_file /var/log/fluentd/kubernetes.log.pos\r\n
     \ tag kubernetes.*\r\n  read_from_head true\r\n  <parse>\r\n    @type json\r\n
-    \   time_format %Y-%m-%dT%H:%M:%S.%NZ\r\n  </parse>\r\n</source>"
+    \   time_format %Y-%m-%dT%H:%M:%S.%NZ\r\n  </parse>\r\n</source>\r\n\r\n<filter
+    kubernetes.var.log.containers.**.log>\r\n  @type kubernetes_metadata\r\n</filter>\r\n"
 kind: ConfigMap
 metadata:
   creationTimestamp: null

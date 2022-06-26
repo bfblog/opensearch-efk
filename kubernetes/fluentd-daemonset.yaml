@@ -41,7 +41,7 @@ spec:
           mountPath: /var/log
       containers:
       - name: fluentd-opensearch
-        image: bfblog/opensearch-fluentd
+        image: bfblog/opensearch-fluentd:develop
         env:
         - name: FLUENT_UID
           value: "0"
