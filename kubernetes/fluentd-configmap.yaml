@@ -11,8 +11,12 @@ data:
     \   num_threads 8\r\n  </store>\r\n  <store>\r\n    @type stdout\r\n  </store>\r\n</match>"
   kubernetes.conf: "<source>\r\n  @type tail\r\n  @id in_tail_container_logs\r\n  path
     /var/log/containers/*.log\r\n  pos_file /var/log/fluentd/kubernetes.log.pos\r\n
-    \ tag kubernetes.*\r\n  read_from_head true\r\n  <parse>\r\n    @type json\r\n
-    \   time_format %Y-%m-%dT%H:%M:%S.%NZ\r\n  </parse>\r\n</source>\r\n\r\n<filter
+    \ tag kubernetes.*\r\n  read_from_head true\r\n  <parse>\r\n    @type multi_format\r\n
+    \   <pattern>\r\n      format json\r\n      time_key time\r\n      time_type string\r\n
+    \     time_format \"%Y-%m-%dT%H:%M:%S.%NZ\"\r\n      keep_time_key false\r\n    </pattern>\r\n
+    \   <pattern>\r\n      format regexp\r\n      expression /^(?<time>.+) (?<stream>stdout|stderr)(
+    (?<logtag>.))? (?<log>.*)$/\r\n      time_format '%Y-%m-%dT%H:%M:%S.%N%:z'\r\n
+    \     keep_time_key false\r\n    </pattern>\r\n  </parse>\r\n</source>\r\n\r\n<filter
     kubernetes.var.log.containers.**.log>\r\n  @type kubernetes_metadata\r\n</filter>\r\n"
 kind: ConfigMap
 metadata:
