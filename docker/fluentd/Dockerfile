@@ -12,7 +12,7 @@ FROM fluentd:latest
 
 USER root
 
-COPY --from=builder /usr/lib/ruby/gems/2.7.0/gems /usr/lib/ruby/gems/2.7.0/gems
+COPY --from=builder /usr/lib/ruby/gems /usr/lib/ruby/gems
 
 USER fluent
 
