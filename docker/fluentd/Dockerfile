@@ -2,7 +2,7 @@ FROM fluentd:latest AS builder
 
 USER root
 
-COPY install.sh ./install.sh
+COPY --chmod=555 install.sh ./install.sh
 
 RUN ./install.sh
 
