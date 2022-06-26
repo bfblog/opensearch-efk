@@ -9,11 +9,17 @@ spec:
   selector:
     matchLabels:
       name: fluentd-opensearch
+      version: v1
+      kubernetes.io/cluster-service: "true"
   template:
     metadata:
       labels:
         name: fluentd-opensearch
+        version: v1
+        kubernetes.io/cluster-service: "true"
     spec:
+      serviceAccount: fluentd
+      serviceAccountName: fluentd
       tolerations:
       # these tolerations are to have the daemonset runnable on control plane nodes
       # remove them if your control plane nodes should not run pods
@@ -23,9 +29,22 @@ spec:
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
+      initContainers:
+      - name: create-npos-log-permissions
+        image: busybox
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        command: ["sh", "-c", "mkdir -p /var/log/fluentd && chown 100 /var/log/fluentd"]
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
       containers:
       - name: fluentd-opensearch
         image: bfblog/opensearch-fluentd
+        env:
+        - name: FLUENT_UID
+          value: "0"
         resources:
           limits:
             memory: 200Mi
@@ -38,8 +57,7 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
-        - mountPath: /fluentd/etc/fluent.conf
-          subPath: fluent.conf
+        - mountPath: /fluentd/etc
           readOnly: true
           name: fluentd-conf
       terminationGracePeriodSeconds: 30
@@ -53,6 +71,3 @@ spec:
       - name: fluentd-conf
         configMap:
           name: fluentd-configuration
-          items:
-            - key: fluent.conf
-              path: fluent.conf
